@@ -1,49 +1,82 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="DSRT Portal - Secure Modular Runtime v2" />
   <title>DSRT Portal</title>
 
-  <!-- Content Security Policy - tune via server headers for stronger control -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'">
+  <!-- Base styling -->
+  <link rel="stylesheet" href="assets/styles.css" />
 
-  <link rel="manifest" href="/manifest.json">
-  <link rel="icon" href="/assets/icons/dsrt-icon-192.png">
-  <link rel="stylesheet" href="/assets/styles.css">
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/icon.png" />
 
-  <!-- Load core modules (order matters) -->
-  <script src="/scripts/core/dsrt-config.js"></script>
-  <script src="/scripts/core/dsrt-session.js"></script>
-  <script src="/scripts/core/dsrt-bot.js"></script>
-  <script src="/scripts/core/dsrt-analytics.js"></script>
-  <script src="/scripts/core/dsrt-consent.js"></script>
+  <!-- Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(console.error);
+    }
+  </script>
 
-  <script src="/scripts/catalog/dsrt-catalog.js"></script>
-  <script src="/scripts/ui/dsrt-loader.js"></script>
-  <script src="/scripts/ui/dsrt-overlay.js"></script>
-  <script src="/scripts/unity/DSRT.jslib"></script>
-  <script src="/scripts/core/dsrt-runtime.js"></script>
+  <!-- DSRT Config (must be loaded first) -->
+  <script>
+    window.DSRT_CONFIG = {
+      ENV: 'production',
+      PREFIX: 'DSRT',
+      COOKIE_TTL_DAYS: 180,
+      ANALYTICS_ENDPOINT: 'http://localhost:4000/collect',
+      TOKEN_ENDPOINT: 'http://localhost:4000/token',
+      CATALOG_URL: '/config/games.json',
+      PORTAL_NAME: 'DSRT Portal',
+      CONSENT_KEY: 'DSRT_consent_v2',
+      BATCH_MAX: 12,
+      BATCH_INTERVAL_MS: 5000,
+      BATCH_RETRY_LIMIT: 5,
+      BATCH_RETRY_BASE_MS: 1000,
+      DEBUG: true,
+      SENTRY_DSN: '' // isi di production
+    };
+  </script>
 </head>
+
 <body>
-  <header>
-    <img src="/assets/icons/dsrt-icon-192.png" height="36" alt="DSRT">
-    <span>DSRT Portal</span>
-  </header>
+  <main id="app">
+    <h1>DSRT Portal</h1>
+    <p>Status: <span id="dsrt-status">Initializing...</span></p>
 
-  <main>
-    <section id="catalog"></section>
+    <button id="test-analytics">Send Test Event</button>
 
-    <section id="player" style="display:none; position:relative;">
-      <div id="unity-loader" style="display:none;">Loading...</div>
-      <div id="unity-container" style="width:100%;height:600px;background:#000;"></div>
-      <div id="overlay">
-        <button id="btn-fullscreen">Fullscreen</button>
-        <button id="btn-exit">Exit</button>
-      </div>
-    </section>
+    <pre id="dsrt-log"></pre>
   </main>
 
-  <footer>© DSRT</footer>
+  <!-- Core DSRT scripts -->
+  <script src="scripts/core/dsrt-config.js"></script>
+  <script src="scripts/core/dsrt-session.js"></script>
+  <script src="scripts/core/dsrt-consent.js"></script>
+  <script src="scripts/core/dsrt-analytics.js"></script>
+  <script src="scripts/core/dsrt-runtime.js"></script>
+
+  <!-- Inline test helper -->
+  <script>
+    const logEl = document.getElementById('dsrt-log');
+    const statusEl = document.getElementById('dsrt-status');
+
+    statusEl.textContent = 'Ready (connected to Collector)';
+    logEl.textContent = '✅ DSRT Portal initialized.\n';
+
+    document.getElementById('test-analytics').onclick = async () => {
+      if (window.DSRT_Analytics) {
+        DSRT_Analytics.enqueue({
+          type: 'test_event',
+          source: 'manual_click',
+          ts: Date.now()
+        });
+        logEl.textContent += '📡 Sent test_event to collector.\n';
+      } else {
+        logEl.textContent += '⚠️ Analytics module not loaded.\n';
+      }
+    };
+  </script>
 </body>
 </html>
