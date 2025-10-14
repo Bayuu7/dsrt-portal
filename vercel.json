@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "collector/server.js", "use": "@vercel/node", "config": { "maxLambdaSize": "50mb" } },
+    { "src": "index.html", "use": "@vercel/static" },
+    { "src": "scripts/**", "use": "@vercel/static" },
+    { "src": "assets/**", "use": "@vercel/static" },
+    { "src": "config/**", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/token", "dest": "collector/server.js" },
+    { "src": "/collect", "dest": "collector/server.js" },
+    { "src": "/(.*)", "dest": "/" }
+  ]
+}
