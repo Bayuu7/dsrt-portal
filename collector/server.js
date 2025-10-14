@@ -1,4 +1,4 @@
-// collector/server.js - Node.js collector with JWT token issuance & verification + Sentry
+require('dotenv').config();
 const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
