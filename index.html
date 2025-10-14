@@ -5,40 +5,45 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>DSRT Portal</title>
 
-  <!-- Content Security Policy - adjust server-side for stronger control -->
+  <!-- Content Security Policy - tune via server headers for stronger control -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'">
 
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="/assets/icons/dsrt-icon-192.png">
   <link rel="stylesheet" href="/assets/styles.css">
 
-  <!-- Load config & core modules (order matters) -->
+  <!-- Load core modules (order matters) -->
   <script src="/scripts/core/dsrt-config.js"></script>
   <script src="/scripts/core/dsrt-session.js"></script>
   <script src="/scripts/core/dsrt-bot.js"></script>
   <script src="/scripts/core/dsrt-analytics.js"></script>
   <script src="/scripts/core/dsrt-consent.js"></script>
+
   <script src="/scripts/catalog/dsrt-catalog.js"></script>
   <script src="/scripts/ui/dsrt-loader.js"></script>
   <script src="/scripts/ui/dsrt-overlay.js"></script>
-  <script src="/scripts/unity/DSRT.jslib"></script> <!-- safe to include as plain text; unity project also needs it -->
+  <script src="/scripts/unity/DSRT.jslib"></script>
   <script src="/scripts/core/dsrt-runtime.js"></script>
-
 </head>
 <body>
-  <header><img src="/assets/icons/dsrt-icon-192.png" height="36" alt="DSRT"> <span>DSRT Portal</span></header>
+  <header>
+    <img src="/assets/icons/dsrt-icon-192.png" height="36" alt="DSRT">
+    <span>DSRT Portal</span>
+  </header>
+
   <main>
     <section id="catalog"></section>
 
-    <section id="player" style="display:none;">
+    <section id="player" style="display:none; position:relative;">
       <div id="unity-loader" style="display:none;">Loading...</div>
-      <div id="unity-container"></div>
+      <div id="unity-container" style="width:100%;height:600px;background:#000;"></div>
       <div id="overlay">
         <button id="btn-fullscreen">Fullscreen</button>
         <button id="btn-exit">Exit</button>
       </div>
     </section>
   </main>
+
   <footer>© DSRT</footer>
 </body>
 </html>
