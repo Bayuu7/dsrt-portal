@@ -1,7 +1,3 @@
-/* dsrt-bot.js
-   Bot detection heuristics. Non-blocking, returns array of flags.
-   Export: window.DSRT_DetectBot()
-*/
 (function(global){
   async function detectBot(){
     const flags = [];
@@ -15,7 +11,6 @@
       if(screen && screen.width === 400 && screen.height === 400) flags.push('screen-400x400');
       if(typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency > 64) flags.push('many-cores');
 
-      // iframe probe
       try {
         const ifr = document.createElement('iframe');
         ifr.srcdoc = '<script>window.__dsrt_probe=1<\/script>';
@@ -25,7 +20,6 @@
         document.body.removeChild(ifr);
       } catch(e){ flags.push('iframe-ex'); }
 
-      // permissions
       try {
         if(navigator.permissions){
           const p = await navigator.permissions.query({name:'notifications'}).catch(()=>({state:'unknown'}));
@@ -33,13 +27,10 @@
         }
       } catch(e){}
 
-      // canvas tamper
       try {
         const orig = HTMLCanvasElement.prototype.toDataURL;
         let tampered = false;
-        try {
-          Object.defineProperty(HTMLCanvasElement.prototype, 'toDataURL', { get(){ tampered = true; return orig; }, configurable:true });
-        } catch(e){}
+        try { Object.defineProperty(HTMLCanvasElement.prototype, 'toDataURL', { get(){ tampered = true; return orig; }, configurable:true }); } catch(e){}
         try { Object.defineProperty(HTMLCanvasElement.prototype, 'toDataURL', { value: orig }); } catch(e){}
         if(tampered) flags.push('canvas-tampered');
       } catch(e){}
