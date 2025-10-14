@@ -1,6 +1,3 @@
-/* DSRTBridge.cs
-   Unity C# wrapper. Put into Assets/Scripts/ and add to a GameObject named "DSRTBridge".
-*/
 using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
@@ -31,16 +28,12 @@ public class DSRTBridge : MonoBehaviour
             }
         } catch(Exception ex) { Debug.LogWarning("[DSRT] Init error: " + ex.Message); }
 
-        // example: set analytics endpoint (override)
         DSRT_SetAnalyticsEndpoint(Application.absoluteURL + "collect");
-
-        // request bot detection (async)
         DSRT_RequestBotDetection();
     }
 
     public void OnBotDetection(string jsonFlags) {
         Debug.Log("[DSRT] Bot flags: " + jsonFlags);
-        // add logic to disable analytics/ads if necessary
     }
 
     public void SendEvent(object evt) {
