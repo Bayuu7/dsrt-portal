@@ -1,0 +1,23 @@
+[
+  {
+    "id": "unity-astro",
+    "title": "Astro Runner 3D",
+    "description": "Run through space platforms and collect crystals!",
+    "thumbnail": "/assets/icons/dsrt-icon-192.png",
+    "path": "/cdn/game-builds/unity-astro/index.html"
+  },
+  {
+    "id": "unity-racer",
+    "title": "Turbo Racer",
+    "description": "Fast-paced 3D racing game built with Unity WebGL.",
+    "thumbnail": "/assets/icons/dsrt-icon-512.png",
+    "path": "/cdn/game-builds/unity-racer/index.html"
+  },
+  {
+    "id": "unity-brick",
+    "title": "Brick Smash Deluxe",
+    "description": "Classic breakout game recreated in Unity.",
+    "thumbnail": "/assets/icons/dsrt-icon-192.png",
+    "path": "/cdn/game-builds/unity-brick/index.html"
+  }
+]
