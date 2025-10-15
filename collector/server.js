@@ -1,3 +1,33 @@
+// --- HYBRID DB (optional) ---
+// Activates only when DSRT_DB_ENABLED=true in .env
+const sqlite3 = require('sqlite3').verbose();
+const { open } = require('sqlite');
+
+let db = null;
+async function initOptionalDB() {
+  try {
+    if (process.env.DSRT_DB_ENABLED !== 'true') {
+      console.log('[DSRT] SQLite disabled (set DSRT_DB_ENABLED=true to enable).');
+      return;
+    }
+    const dbPath = process.env.DSRT_DB_PATH || path.join(__dirname, 'collector.db');
+    db = await open({ filename: dbPath, driver: sqlite3.Database });
+    await db.exec(`CREATE TABLE IF NOT EXISTS analytics (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      event_type TEXT,
+      user_id TEXT,
+      game_id TEXT,
+      token_payload TEXT,
+      receivedAt TEXT,
+      raw TEXT
+    );`);
+    console.log('[DSRT] SQLite enabled at', dbPath);
+  } catch (err) {
+    console.error('[DSRT] Failed init SQLite:', err);
+    db = null;
+  }
+}
+initOptionalDB();
 require('dotenv').config();
 const express = require('express');
 const helmet = require('helmet');
